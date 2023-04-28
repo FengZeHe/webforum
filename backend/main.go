@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/webforum/dao/mysql"
 	"github.com/webforum/dao/redis"
+	"github.com/webforum/routers"
 	"github.com/webforum/setting"
 )
 
@@ -21,4 +22,13 @@ func main() {
 		fmt.Println("redis init failed; err:%v", err)
 	}
 	defer redis.Close()
+
+	// 注册路由
+	r := routers.SetupRouter(setting.Conf.Mode)
+	err := r.Run(fmt.Sprintf(":%d", setting.Conf.Port))
+	if err != nil {
+		fmt.Printf("run server failed, err:%v\n", err)
+		return
+	}
+
 }
