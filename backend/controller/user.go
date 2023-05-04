@@ -11,13 +11,11 @@ import (
 )
 
 func SignUpHandler(c *gin.Context) {
-	fmt.Println("SingUpHandler ...")
 	//1. 获取请求参数
 	var fo *models.RegisterForm
 	//2.校验数据有效性
 	if err := c.ShouldBindJSON(&fo); err != nil {
 		// 如果请求参数有误，返回响应
-		fmt.Println("请求参数有误", err)
 		zap.L().Error("SignUp with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -33,7 +31,6 @@ func SignUpHandler(c *gin.Context) {
 
 	// 3.业务处理 -- 注册用户
 	if err := logic.SignUp(fo); err != nil {
-		fmt.Println("注册业务失败", err)
 		zap.L().Error("logic.signup failed", zap.Error(err))
 		if err.Error() == mysql.ErrorUserExit {
 			ResponseError(c, CodeUserExist)

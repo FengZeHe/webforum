@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"fmt"
 	"github.com/webforum/dao/mysql"
 	"github.com/webforum/models"
 	"github.com/webforum/pkg/snowflake"
@@ -18,7 +17,6 @@ func SignUp(p *models.RegisterForm) (error error) {
 	// 生成UID
 	userId, err := snowflake.GetID()
 	if err != nil {
-		fmt.Println("生成ID失败", err)
 		return mysql.ErrorGenIDFailed
 	}
 

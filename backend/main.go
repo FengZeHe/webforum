@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/webforum/dao/mysql"
 	"github.com/webforum/dao/redis"
+	"github.com/webforum/logger"
 	"github.com/webforum/pkg/snowflake"
 	"github.com/webforum/routers"
 	"github.com/webforum/setting"
@@ -23,6 +24,11 @@ func main() {
 		fmt.Println("redis init failed; err:%v", err)
 	}
 	defer redis.Close()
+
+	if err := logger.Init(setting.Conf.LogConfig, setting.Conf.Mode); err != nil {
+		fmt.Println("Log init failed; err:%v", err)
+		return
+	}
 
 	// 雪花算法生成分布式ID
 	if err := snowflake.Init(1); err != nil {
