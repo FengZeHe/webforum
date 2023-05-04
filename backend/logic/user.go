@@ -3,6 +3,7 @@ package logic
 import (
 	"github.com/webforum/dao/mysql"
 	"github.com/webforum/models"
+	"github.com/webforum/pkg/jwt"
 	"github.com/webforum/pkg/snowflake"
 )
 
@@ -30,5 +31,27 @@ func SignUp(p *models.RegisterForm) (error error) {
 	}
 	// 3. 将数据保存到数据库
 	return mysql.InsertUser(u)
+
+}
+
+func Login(p *models.LoginForm) (user *models.User, err error) {
+	user = &models.User{
+		UserName: p.UserName,
+		Password: p.Password,
+	}
+	if err := mysql.Login(user); err != nil {
+		return nil, err
+	}
+
+	// 生成JWT
+	accessToken, refreshToken, err := jwt.GenToken(user.UserID, user.UserName)
+	if err != nil {
+		return
+	}
+
+	user.AccessToken = accessToken
+	user.RefreshToken = refreshToken
+
+	return
 
 }

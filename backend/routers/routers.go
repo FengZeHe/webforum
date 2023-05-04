@@ -16,6 +16,7 @@ func SetupRouter(mode string) *gin.Engine {
 
 	// 登录注册业务
 	v1.POST("/signup", controller.SignUpHandler)
+	v1.POST("/login", controller.LoginHandler)
 
 	return r
 }

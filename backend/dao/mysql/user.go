@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"crypto/md5"
+	"database/sql"
 	"encoding/hex"
 	"github.com/pkg/errors"
 	"github.com/webforum/models"
@@ -36,4 +37,27 @@ func InsertUser(user models.User) (error error) {
 	sqlSQL := `insert into user(user_id,username,password,email,gender) values (?,?,?,?,?)`
 	_, err := db.Exec(sqlSQL, user.UserID, user.UserName, user.Password, user.Email, user.Gender)
 	return err
+}
+
+// Login 登录业务
+func Login(user *models.User) (err error) {
+	// 记录一下用户登录密码
+	originPassword := user.Password
+	sqlStr := `select user_id,username,password from user where username = ?`
+	err = db.Get(user, sqlStr, user.UserName)
+	// 查询数据库异常
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+	// 如果用户不存在
+	if err == sql.ErrNoRows {
+		return errors.New(ErrorUserNotExit)
+	}
+	// 生成加密密码与查询到的秘密进行比对
+	password := encryptPassword([]byte(originPassword))
+	if user.Password != password {
+		return errors.New(ErrorPasswordWrong)
+	}
+	return nil
+
 }
