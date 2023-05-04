@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/webforum/controller"
+	"github.com/webforum/middlewares"
 )
 
 func SetupRouter(mode string) *gin.Engine {
@@ -17,6 +18,12 @@ func SetupRouter(mode string) *gin.Engine {
 	// 登录注册业务
 	v1.POST("/signup", controller.SignUpHandler)
 	v1.POST("/login", controller.LoginHandler)
+
+	// 创建帖子
+	v1.Use(middlewares.JWTAuthMiddleware())
+	{
+		v1.POST("/post", controller.CreatePostHandler)
+	}
 
 	return r
 }
