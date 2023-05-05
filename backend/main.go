@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/webforum/dao/mysql"
 	"github.com/webforum/dao/redis"
+	"github.com/webforum/dao/taos"
 	"github.com/webforum/logger"
 	"github.com/webforum/pkg/snowflake"
 	"github.com/webforum/routers"
@@ -24,6 +25,11 @@ func main() {
 		fmt.Println("redis init failed; err:%v", err)
 	}
 	defer redis.Close()
+
+	if err := taos.Init(setting.Conf.TaosConfig); err != nil {
+		fmt.Println("toas init failed; err:%v", err)
+	}
+	defer taos.Close()
 
 	if err := logger.Init(setting.Conf.LogConfig, setting.Conf.Mode); err != nil {
 		fmt.Println("Log init failed; err:%v", err)

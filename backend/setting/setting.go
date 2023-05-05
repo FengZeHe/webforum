@@ -17,6 +17,7 @@ type AppConfig struct {
 	MachineID    int    `mapstructure:"machine_id"`
 	*MysqlConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
+	*TaosConfig  `mapstructure:"taos"`
 	*LogConfig   `mapstructure:"log"`
 }
 
@@ -37,6 +38,13 @@ type RedisConfig struct {
 	DB           int    `mapstructure:"db"`
 	PoolSize     int    `mapstructure:"pool_size"`
 	MinIdleConns int    `mapstructure:"min_idle_conns"`
+}
+
+type TaosConfig struct {
+	Host     string `mapstructure:"host"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Port     string `mapstructure:"port"`
 }
 
 type LogConfig struct {

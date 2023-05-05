@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"fmt"
 	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
@@ -18,7 +17,6 @@ func CreatePost(postID, userID uint64, title, summary string, CommunityID uint64
 	now := float64(time.Now().Unix())
 	votedKey := KeyPostVotedZSetPrefix + strconv.Itoa(int(postID))
 	communityKey := KeyCommunityPostSetPrefix + strconv.Itoa(int(CommunityID))
-	fmt.Println(votedKey)
 	postInfo := map[string]interface{}{
 		"title":    title,
 		"summary":  summary,
